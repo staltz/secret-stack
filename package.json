@@ -17,6 +17,7 @@
     "pull-inactivity": "~2.1.1",
     "pull-rate": "^1.0.2",
     "pull-stream": "^3.4.5",
+    "ssb-friends": "^2.4.0",
     "stream-to-pull-stream": "^1.6.1"
   },
   "devDependencies": {

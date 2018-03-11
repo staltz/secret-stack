@@ -181,9 +181,8 @@ module.exports = function (opts) {
 
       var server = msServer.server(setupRPC)
 
-      function setupRPC (stream, manf, isClient, shit) {
+      function setupRPC (stream, manf, isClient) {
         var remoteAddress = parse(stream.address)
-        console.log('remoteAddress:', remoteAddress)
         var rpc = Muxrpc(create.manifest, manf || create.manifest)(api, stream.auth)
         var rpcStream = rpc.createStream()
         rpc.id = '@' + u.toId(stream.remote)
@@ -209,7 +208,6 @@ module.exports = function (opts) {
               address: remoteAddress
             }
           }
-          console.log('emitting message', message)
           api.emit('RTC_CLIENT_CONNECTED', message)
         }
 
