@@ -45,6 +45,11 @@ function toSodiumKeys (keys) {
 
 function coearseAddress (address) {
   if(isObject(address)) {
+    if (address.source === 'dht') {
+      return ['dht', address.host, 1].join(':') +
+        '~' +
+        ['shs', toBase64(address.key)].join(':')
+    }
     var protocol = 'net'
     if (address.host.endsWith(".onion"))
         protocol = 'onion'
