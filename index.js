@@ -9,6 +9,7 @@ var WS          = require('multiserver/plugins/ws')
 var Net         = require('multiserver/plugins/net')
 var Onion       = require('multiserver/plugins/onion')
 var Shs         = require('multiserver/plugins/shs')
+var Dht         = require('multiserver-dht');
 
 var nonPrivate = require('non-private-ip')
 var Inactive   = require('pull-inactivity')
@@ -99,11 +100,15 @@ module.exports = function (opts) {
       timeout: opts.timeout || (opts.timers && opts.timers.handshake) || 10e3
     })
 
-    var ms = MultiServer([
+    var plugins = [
       [Net({}), shs],
       [Onion({}), shs],
       [WS({}), shs]
-    ], msLogger)
+    ]
+
+    if (opts.dht) plugins.push([Dht({}), shs])
+
+    var ms = MultiServer(plugins, msLogger)
 
     return function (address, cb) {
       address = coearseAddress(address)
@@ -178,6 +183,7 @@ module.exports = function (opts) {
         [Net({port: port, host: host}), shs],
         [Onion({server: false}), shs]
       ]
+      if (opts.dht) server_protocols.push([Dht({ key: opts.dht.key }), shs])
       var client_protocols = server_protocols
 
       if (opts["tor-only"])
