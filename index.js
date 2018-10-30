@@ -126,6 +126,35 @@ module.exports = function (opts) {
         var server_suites = []
         var client_suites = []
 
+        function getTransport(name) {
+          return transforms.filter(function (e) { return e.name == name })
+        }
+
+        function getTransform (name) {
+          return transports.filter(function (e) { return e.name == name })
+        }
+
+        function setupProtocols (coming) {
+          if(!coming) return
+          var a = []
+          function add(transport, transform, conf) {
+            if(transport && transform) a.push(transform.create
+          }
+          for(var name in coming) {
+            var proto = coming[name]
+            var transport = getTransport(proto.name)
+            var transform = getTransform(proto.transform)
+            if(transport && transform) {
+              a.push([transport.create(proto), transform.create()])
+            }
+          }
+          return a
+        }
+
+        var server_suites = setupProtocols(opts.multiserver.incoming)
+        var client_suites = setupProtocols(opts.multiserver.outgoing)
+
+/*
         for (var incTransportType in opts.connections.incoming) {
           opts.connections.incoming[incTransportType].forEach(function (conf) {
             transforms.forEach(function (transform) {
@@ -157,6 +186,7 @@ module.exports = function (opts) {
             })
           })
         }
+*/
 
         ms_client = MultiServer(client_suites)
 
@@ -263,6 +293,12 @@ module.exports = function (opts) {
   .use(require('./plugins/net'))
   .use(require('./plugins/shs'))
 }
+
+
+
+
+
+
 
 
 
