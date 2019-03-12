@@ -1,11 +1,14 @@
 {
-  "name": "secret-stack",
+  "name": "@staltz/secret-stack",
   "description": "create secure peer to peer networks using secret-handshakes",
-  "version": "4.2.4",
+  "version": "4.2.5",
   "homepage": "https://github.com/ssbc/secret-stack",
   "repository": {
     "type": "git",
     "url": "git://github.com/ssbc/secret-stack.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "hoox": "0.0.1",
