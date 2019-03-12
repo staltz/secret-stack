@@ -55,6 +55,14 @@ function msLogger (stream) {
   return stream
 }
 
+function isPermsList(list) {
+  return (null == list) || ( Array.isArray(list) && list.every(isString) )
+}
+
+function isPermissions (perms) {
+  //allow: null means enable everything.
+  return perms && isObject(perms) && isPermsList(perms.allow) && isPermsList(perms.deny)
+}
 
 //opts must have appKey
 module.exports = function (opts) {
@@ -161,7 +169,7 @@ module.exports = function (opts) {
       setImmediate(setupMultiserver)
 
       function setupRPC (stream, manf, isClient) {
-        var rpc = Muxrpc(create.manifest, manf || create.manifest)(api, stream.auth === true ? create.permissions.anonymous : stream.auth)
+        var rpc = Muxrpc(create.manifest, manf || create.manifest)(api, isClient ? create.permissions.anonymous : isPermissions(stream.auth) ? stream.auth : create.permissions.anonymous)
         var rpcStream = rpc.createStream()
         rpc.id = '@'+u.toId(stream.remote)
         if(timeout_inactivity > 0 && api.id !== rpc.id) rpcStream = Inactive(rpcStream, timeout_inactivity)
